@@ -1,114 +1,40 @@
-# 📊 Customer Churn Prediction (Machine Learning Project)
+# Customer Churn Prediction
 
-## 📌 Project Overview
+A binary classification project that predicts which bank customers are likely to churn, using a comparison of six machine learning models with threshold tuning.
 
-This project predicts whether a customer will churn (leave the service) using machine learning models. The goal is to identify high-risk customers and improve retention strategies.
+## Overview
 
----
+Customer churn is costly to acquire vs. retain. This project trains multiple classifiers on historical customer data, handles class imbalance with SMOTE, and selects the best model by optimising the F1 score across the precision-recall curve — rather than defaulting to a 0.5 probability threshold.
 
-## 📂 Dataset
+## Dataset
 
-The dataset is stored in a local SQLite database (`churn.db`) and originally contains customer demographic and banking information.
+Sourced from a SQLite database (`churn.db`, table: `customers`). Key features include credit score, geography, gender, age, tenure, balance, number of products, and activity status. The target variable is `Exited` (1 = churned, 0 = retained).
 
-Target variable:
+## Models Compared
 
-* `Exited` → 1 if customer churned, 0 otherwise
+| Model | Handles Imbalance | Scaled |
+|---|---|---|
+| Logistic Regression | SMOTE | ✓ |
+| Random Forest | SMOTE | — |
+| K-Nearest Neighbors | SMOTE | ✓ |
+| Support Vector Machine | SMOTE | ✓ |
+| XGBoost | SMOTE | — |
+| Gradient Boosting | SMOTE | — |
 
----
-
-## ⚙️ Data Processing
-
-* Loaded data from SQLite database
-* Removed irrelevant features:
-
-  * RowNumber
-  * CustomerId
-  * Surname
-* Applied one-hot encoding to categorical variables
-* Split dataset into training and testing sets (80/20)
-
----
-
-## 🧠 Feature Engineering
-
-* Converted categorical variables using `pd.get_dummies`
-* Balanced dataset using SMOTE (Synthetic Minority Oversampling Technique)
-
----
-
-## 🤖 Models Used
-
-Multiple machine learning models were trained and compared:
-
-* Logistic Regression
-* Random Forest
-* K-Nearest Neighbors
-* Support Vector Machine
-* XGBoost
-* Gradient Boosting
-
-All models were evaluated using a pipeline including:
-
-* SMOTE
-* StandardScaler (where needed)
-
----
-
-## 📊 Evaluation Strategy
-
-* Precision-Recall Curve analysis
-* F1-score optimization
-* Threshold tuning (not fixed at 0.5)
-* Confusion matrix analysis
-* Classification report comparison
-
----
-
-## 🏆 Model Selection
-
-The best model was selected based on highest F1-score after threshold optimization.
-
----
-
-## 📈 Key Insight
-
-* Threshold tuning significantly improves churn detection performance
-* Class imbalance handling (SMOTE) is critical for this dataset
-* Ensemble models outperform basic linear models in most cases
-
----
-
-## 🚀 How to Run
+## Setup
 
 ```bash
-python3 src/train.py
+pip install numpy pandas scikit-learn xgboost imbalanced-learn matplotlib
 ```
 
----
+Place `churn.db` in the project root, then run:
 
-## 🧠 Technologies Used
+```bash
+python train.py
+```
 
-* Python
-* Pandas, NumPy
-* Scikit-learn
-* XGBoost
-* Imbalanced-learn
-* Matplotlib
-* SQLite
+## Output
 
----
-
-## 📌 Future Improvements
-
-* Hyperparameter tuning (GridSearchCV / Optuna)
-* Model deployment (Flask / FastAPI)
-* Feature importance analysis
-* Real-time prediction API
-
----
-
-## 👨‍💻 Author
-
-Hasan Bay
-
-Machine Learning Enthusiast | Focused on AI & Data Science
+- Per-model F1 scores and optimal thresholds printed to console
+- Confusion matrix and classification report for the best model
+- Precision-Recall vs Threshold plot for visual threshold selection
